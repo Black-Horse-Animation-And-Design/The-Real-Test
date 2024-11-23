@@ -952,8 +952,41 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6464483526938882238, guid: a631fed122251ba47a2a9da56dbb70ad,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1820503633}
   m_SourcePrefab: {fileID: 100100000, guid: a631fed122251ba47a2a9da56dbb70ad, type: 3}
+--- !u!1 &1820503631 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6464483526938882238, guid: a631fed122251ba47a2a9da56dbb70ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 1820503630}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1820503632 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1193379277218671992, guid: a631fed122251ba47a2a9da56dbb70ad,
+    type: 3}
+  m_PrefabInstance: {fileID: 1820503630}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1820503633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1820503631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71a44208f66a43847a7881d1ee70c0ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ambientOcclusionTexture: {fileID: 0}
+  occlusionStrength: 1
+  occlusionUVSet: 0
+  applyOcclusionIntoDiffuse: 0
+  rendererRef: {fileID: 1820503632}
 --- !u!1 &1974557783
 GameObject:
   m_ObjectHideFlags: 0
