@@ -108,19 +108,6 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: WebGL
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites: []
@@ -141,9 +128,9 @@ TextureImporter:
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: "{\n    \"version\": 1,\n    \"quality\": {\n        \"MaxOccluderDistance\":
-    2.0,\n        \"MsaaSamples\": 4,\n        \"MsaaDetailDetection\": 500,\n       
-    \"TextureSize\": 128,\n        \"TracerTextureSize\": 64,\n        \"TracerFov\":
-    170.0,\n        \"DilateIterations\": 20,\n        \"DenoiseIterations\": 2,\n       
+    2.0,\n        \"MsaaSamples\": 4,\n        \"MsaaDetailDetection\": 2000000,\n       
+    \"TextureSize\": 2048,\n        \"TracerTextureSize\": 64,\n        \"TracerFov\":
+    170.0,\n        \"DilateIterations\": 20,\n        \"DenoiseIterations\": 5,\n       
     \"Gamma\": 1.0\n    },\n    \"meshesToBake\": [\n        {\n            \"meshGUID\":
     \"a631fed122251ba47a2a9da56dbb70ad\",\n            \"meshFileID\": 5358534040156480959,\n           
     \"uv\": 0,\n            \"objectToWorld\": {\n                \"e00\": 358.4100646972656,\n               
@@ -153,8 +140,8 @@ TextureImporter:
     \"e20\": -415.5210266113281,\n                \"e21\": 0.0,\n               
     \"e22\": 358.4100646972656,\n                \"e23\": -95.18511962890625,\n               
     \"e30\": 0.0,\n                \"e31\": 0.0,\n                \"e32\": 0.0,\n               
-    \"e33\": 1.0\n            },\n            \"uvToWorldRatio\": 0.005930098704993725,\n           
-    \"useFlags\": 0,\n            \"mesh\": {\n                \"instanceID\": 40466\n           
+    \"e33\": 1.0\n            },\n            \"uvToWorldRatio\": 0.783920407295227,\n           
+    \"useFlags\": 0,\n            \"mesh\": {\n                \"instanceID\": 52940\n           
     }\n        }\n    ],\n    \"occluders\": [\n        {\n            \"meshGUID\":
     \"a631fed122251ba47a2a9da56dbb70ad\",\n            \"meshFileID\": 5358534040156480959,\n           
     \"uv\": 0,\n            \"objectToWorld\": {\n                \"e00\": 358.4100646972656,\n               
@@ -164,8 +151,8 @@ TextureImporter:
     \"e20\": -415.5210266113281,\n                \"e21\": 0.0,\n               
     \"e22\": 358.4100646972656,\n                \"e23\": -95.18511962890625,\n               
     \"e30\": 0.0,\n                \"e31\": 0.0,\n                \"e32\": 0.0,\n               
-    \"e33\": 1.0\n            },\n            \"uvToWorldRatio\": 0.005930098704993725,\n           
-    \"useFlags\": 0,\n            \"mesh\": {\n                \"instanceID\": 40466\n           
+    \"e33\": 1.0\n            },\n            \"uvToWorldRatio\": 0.783920407295227,\n           
+    \"useFlags\": 0,\n            \"mesh\": {\n                \"instanceID\": 52940\n           
     }\n        }\n    ]\n}"
   assetBundleName: 
   assetBundleVariant: 
