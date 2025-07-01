@@ -93,7 +93,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: ddfd34a9d2c429e4f99348df907058f4,
+  m_LightingDataAsset: {fileID: 112000000, guid: d765d197945d33d42963556da5ba5ddc,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: d3f1455f415151a47a2f58102dfe6df5,
     type: 2}
@@ -279,7 +279,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1243189407
+--- !u!1 &1131089834
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -287,8 +287,8 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1243189409}
-  - component: {fileID: 1243189408}
+  - component: {fileID: 1131089836}
+  - component: {fileID: 1131089835}
   m_Layer: 0
   m_Name: Adaptive Probe Volume
   m_TagString: Untagged
@@ -296,20 +296,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1243189408
+--- !u!114 &1131089835
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243189407}
+  m_GameObject: {fileID: 1131089834}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cded085d155cde949b60f67a11dbc3bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 2
-  size: {x: 10, y: 10, z: 10}
+  mode: 1
+  size: {x: 2407.7095, y: 1641.5206, z: 2310.48}
   overrideRendererFilters: 0
   minRendererVolumeSize: 0.1
   objectLayerMask:
@@ -318,7 +318,7 @@ MonoBehaviour:
   lowestSubdivLevelOverride: 0
   highestSubdivLevelOverride: 3
   overridesSubdivLevels: 0
-  mightNeedRebaking: 1
+  mightNeedRebaking: 0
   cachedTransform:
     e00: 0
     e01: 0
@@ -340,16 +340,16 @@ MonoBehaviour:
   fillEmptySpaces: 0
   version: 2
   globalVolume: 0
---- !u!4 &1243189409
+--- !u!4 &1131089836
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1243189407}
+  m_GameObject: {fileID: 1131089834}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 74.9625, y: -126.58469, z: -30.482313}
+  m_LocalPosition: {x: -462.9021, y: -116.20471, z: -689.8511}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1052,6 +1052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71a44208f66a43847a7881d1ee70c0ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   ambientOcclusionTexture: {fileID: 2800000, guid: efc6aeaa3f5f0654ca67ded7e2f43ab6,
     type: 3}
   occlusionStrength: 1
@@ -1088,6 +1089,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71a44208f66a43847a7881d1ee70c0ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   ambientOcclusionTexture: {fileID: 2800000, guid: 9bb66924a78c8f745b8447993ae6daee,
     type: 3}
   occlusionStrength: 0.635
@@ -1106,6 +1108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71a44208f66a43847a7881d1ee70c0ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   ambientOcclusionTexture: {fileID: 2800000, guid: c538492bb8d01a241b62c42616c39b0c,
     type: 3}
   occlusionStrength: 2
@@ -1533,6 +1536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71a44208f66a43847a7881d1ee70c0ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   ambientOcclusionTexture: {fileID: 2800000, guid: 580833f3cbd7ba648be3c5dc5aee6b50,
     type: 3}
   occlusionStrength: 1.606
@@ -1563,6 +1567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71a44208f66a43847a7881d1ee70c0ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mode: 0
   ambientOcclusionTexture: {fileID: 0}
   occlusionStrength: 0.704
   occlusionUVSet: 0
@@ -1693,5 +1698,5 @@ SceneRoots:
   - {fileID: 1671389988}
   - {fileID: 1586956993}
   - {fileID: 1522791979}
-  - {fileID: 1243189409}
   - {fileID: 1287115405}
+  - {fileID: 1131089836}

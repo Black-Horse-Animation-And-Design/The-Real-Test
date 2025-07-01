@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SampleScene Baking Set
   m_EditorClassIdentifier: 
   singleSceneMode: 0
-  dialogNoProbeVolumeInSetShown: 0
+  dialogNoProbeVolumeInSetShown: 1
   settings:
     m_Version: 1
     dilationSettings:
@@ -73,11 +73,11 @@ MonoBehaviour:
   globalBounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
-  bakedSimplificationLevels: -1
-  bakedMinDistanceBetweenProbes: -1
+  bakedSimplificationLevels: 3
+  bakedMinDistanceBetweenProbes: 1
   bakedProbeOcclusion: 0
-  bakedSkyOcclusionValue: -1
-  bakedSkyShadingDirectionValue: -1
+  bakedSkyOcclusionValue: 0
+  bakedSkyShadingDirectionValue: 0
   bakedProbeOffset: {x: 0, y: 0, z: 0}
   bakedMaskCount: 1
   bakedLayerMasks:
@@ -122,8 +122,8 @@ MonoBehaviour:
     m_Keys:
     - 99c9720ab356a0642a771bea13969a05
     m_Values:
-    - hasProbeVolume: 0
+    - hasProbeVolume: 1
       bakeScene: 1
       bounds:
-        m_Center: {x: 0, y: 0, z: 0}
-        m_Extent: {x: 0, y: 0, z: 0}
+        m_Center: {x: -445.5, y: -121.5, z: -688.5}
+        m_Extent: {x: 1255.5, y: 850.5, z: 1174.5}
