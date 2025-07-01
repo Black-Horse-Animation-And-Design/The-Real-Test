@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -31,38 +31,46 @@ namespace ProceduralPixels.BakeAO.Editor
         public Matrix4x4 objectToWorld;
         public MeshContextUseFlags useFlags;
         public float uvToWorldRatio;
+        public long submeshFlags; // -1 and 0 bake all the submeshes.
+        public float transparency;
 
-        public MeshContext(Mesh mesh, UVChannel uvChannel = UVChannel.UV0, MeshContextUseFlags useFlags = MeshContextUseFlags.Default)
+        public MeshContext(Mesh mesh, long submeshFlags = -1, UVChannel uvChannel = UVChannel.UV0, MeshContextUseFlags useFlags = MeshContextUseFlags.Default)
         {
             this.mesh = mesh;
             uv = uvChannel;
             objectToWorld = Matrix4x4.identity;
             this.useFlags = useFlags;
             this.uvToWorldRatio = 0.0f;
+            this.submeshFlags = submeshFlags;
+            this.transparency = 0.0f;
             this.uvToWorldRatio = BakeAOUtils.GetUVToWSRatio(this);
         }
 
-        public MeshContext(MeshRenderer meshRenderer, UVChannel uvChannel = UVChannel.UV0, MeshContextUseFlags useFlags = MeshContextUseFlags.Default) : this(meshRenderer.GetComponent<MeshFilter>(), uvChannel, useFlags)
+        public MeshContext(MeshRenderer meshRenderer, long submeshFlags = -1, UVChannel uvChannel = UVChannel.UV0, MeshContextUseFlags useFlags = MeshContextUseFlags.Default) : this(meshRenderer.GetComponent<MeshFilter>(), submeshFlags, uvChannel, useFlags)
         {
         }
 
-        public MeshContext(SkinnedMeshRenderer skinnedRenderer, UVChannel uvChannel = UVChannel.UV0, MeshContextUseFlags useFlags = MeshContextUseFlags.Default)
+        public MeshContext(SkinnedMeshRenderer skinnedRenderer, long submeshFlags = -1, UVChannel uvChannel = UVChannel.UV0, MeshContextUseFlags useFlags = MeshContextUseFlags.Default)
         {
             this.mesh = skinnedRenderer.sharedMesh;
             uv = uvChannel;
             objectToWorld = skinnedRenderer.transform.localToWorldMatrix;
             this.useFlags = useFlags;
             this.uvToWorldRatio = 0.0f;
+            this.submeshFlags = submeshFlags;
+            this.transparency = 0.0f;
             this.uvToWorldRatio = BakeAOUtils.GetUVToWSRatio(this);
         }
 
-        public MeshContext(MeshFilter meshFilter, UVChannel uvChannel = UVChannel.UV0, MeshContextUseFlags useFlags = MeshContextUseFlags.Default)
+        public MeshContext(MeshFilter meshFilter, long submeshFlags = -1, UVChannel uvChannel = UVChannel.UV0, MeshContextUseFlags useFlags = MeshContextUseFlags.Default)
         {
             mesh = meshFilter.sharedMesh;
             uv = uvChannel;
             objectToWorld = meshFilter.transform.localToWorldMatrix;
             this.useFlags = useFlags;
             this.uvToWorldRatio = 0.0f;
+            this.submeshFlags = submeshFlags;
+            this.transparency = 0.0f;
             this.uvToWorldRatio = BakeAOUtils.GetUVToWSRatio(this);
         }
 
@@ -71,6 +79,9 @@ namespace ProceduralPixels.BakeAO.Editor
             CombineInstance[] instances = new CombineInstance[mesh.subMeshCount];
             for (int i = 0; i < mesh.subMeshCount; i++)
             {
+                if ((submeshFlags & (1L << i)) == 0L)
+                    continue;
+
                 instances[i] = new CombineInstance()
                 {
                     mesh = mesh,
@@ -82,6 +93,35 @@ namespace ProceduralPixels.BakeAO.Editor
             }
 
             return instances;
+        }
+
+        public bool ShouldBakeSubmesh(int submeshIndex)
+        {
+            if (submeshIndex >= 64 || submeshIndex < 0)
+                return false;
+
+            return (submeshFlags & (1L << submeshIndex)) != 0;
+        }
+
+        public void AddSubmesh(int submeshIndex)
+        {
+            if (submeshIndex >= 64 || submeshIndex < 0)
+                return;
+
+            submeshFlags |= 1L << submeshIndex;
+        }
+
+        public void DistardSubmeshFromBaking(int submeshIndex)
+        {
+            if (submeshIndex >= 64 || submeshIndex < 0)
+                return;
+
+            submeshFlags &= ~(1L << submeshIndex);
+        }
+
+        public bool IsTransparent()
+        {
+            return transparency > 0.001f;
         }
     }
 

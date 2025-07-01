@@ -47,6 +47,8 @@ Shader "Hidden/BakeAO/Postprocess"
                 float4 color = tex2D(_MainTex, input.uv);
                 if (color.a > 0.5)
                     color /= color.a;
+                else 
+                    color = float4(1.0f, 1.0f, 1.0f, color.a);
                 return color;
             }
 

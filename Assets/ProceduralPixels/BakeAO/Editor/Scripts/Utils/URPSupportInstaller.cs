@@ -2,13 +2,14 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
 */
 
 using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,49 @@ using UnityEngine;
 
 namespace ProceduralPixels.BakeAO.Editor
 {
-    public class URPSupportInstaller : EditorWindow
+    internal class VersionData : IComparable<VersionData>
+    {
+        public int major;
+        public int minor;
+        public int patch;
+
+        public string supportPackageGUID;
+
+        public VersionData(string version, string supportPackageGUID = null)
+        {
+            major = 0;
+            minor = 0;
+            patch = 0;
+
+            var split = version.Split('.');
+
+            if (split.Length >= 1)
+                ParseNumber(split[0], ref major);
+
+            if (split.Length >= 2)
+                ParseNumber(split[1], ref minor);
+
+            if (split.Length >= 3)
+                ParseNumber(split[2], ref patch);
+
+            this.supportPackageGUID = supportPackageGUID;
+        }
+
+        public static void ParseNumber(string str, ref int refValue)
+        {
+            if (int.TryParse(str, out int result))
+                refValue = result;
+        }
+
+        internal long RawValue => (major * 1000 * 1000) + (minor * 1000) + patch;
+
+        public int CompareTo(VersionData other)
+        {
+            return this.RawValue.CompareTo(other.RawValue);
+        }
+    }
+
+    internal class URPSupportInstaller : EditorWindow
     {
         public const string URP12SupportGUID = "864111a15a126c443b731078721406fb";
         public const string URP13SupportGUID = "f62ecaeda58b742488ebe658fdb9434b";
@@ -28,8 +71,9 @@ namespace ProceduralPixels.BakeAO.Editor
         public const string URP15SupportGUID = "8a2f5a687e9df8348969cf2a833d9301";
         public const string URP16SupportGUID = "22b4fe3d5f67ce14abefadd801860599";
         public const string URP17SupportGUID = "bb6e35de6cebf594da7347cfd7d7a568";
+        public const string URP17_1SupportGUID = "87f49d36ad119a84eaa00bd917dd1618";
 
-        public Dictionary<int, string> versionToGUID = null;
+        internal List<VersionData> supportedVersions = null;
 
         private static ListRequest listRequest;
 
@@ -37,14 +81,15 @@ namespace ProceduralPixels.BakeAO.Editor
 
         private void OnEnable()
         {
-            versionToGUID = new Dictionary<int, string>
+            supportedVersions = new List<VersionData>()
             {
-                { 12, URP12SupportGUID },
-                { 13, URP13SupportGUID },
-                { 14, URP14SupportGUID },
-                { 15, URP15SupportGUID },
-                { 16, URP16SupportGUID },
-                { 17, URP17SupportGUID }
+                new VersionData("12.0", URP12SupportGUID),
+                new VersionData("13.0", URP13SupportGUID),
+                new VersionData("14.0", URP14SupportGUID),
+                new VersionData("15.0", URP15SupportGUID),
+                new VersionData("16.0", URP16SupportGUID),
+                new VersionData("17.0", URP17SupportGUID),
+                new VersionData("17.1", URP17_1SupportGUID),
             };
 
             EditorApplication.update += OnEditorUpdate;
@@ -63,6 +108,8 @@ namespace ProceduralPixels.BakeAO.Editor
 
         private void OnGUI()
         {
+            this.minSize = new Vector2(570, 250);
+
             if (GUILayout.Button("Open Documentation"))
                 Application.OpenURL("https://proceduralpixels.com/BakeAO/Documentation/URPSupportInstaller");
 
@@ -74,8 +121,6 @@ namespace ProceduralPixels.BakeAO.Editor
                 EditorGUILayout.HelpBox("Checking installed URP version, please wait...", MessageType.Info);
                 return;
             }
-
-
 
             if (listRequest.Status == StatusCode.Success)
             {
@@ -96,6 +141,8 @@ namespace ProceduralPixels.BakeAO.Editor
                     installedURPSupportVersion = supportVersionField.GetValue(null) as string;
                 }
 
+                // Installation
+
                 if (isURPInstalled)
                 {
                     EditorGUILayout.LabelField("URP is installed. Detected Version: " + installedURPVersion);
@@ -115,6 +162,31 @@ namespace ProceduralPixels.BakeAO.Editor
                 else
                 {
                     EditorGUILayout.HelpBox("URP is not installed. Please install URP using Package Manager first.", MessageType.Warning);
+                }
+
+                // Apply mode suggestion
+
+                EditorGUILayout.Space(32);
+                var runtimeSettings = BakeAORuntimeSettings.GetOrCreateAsset();
+                runtimeSettings.RefreshApplyMode();
+
+                if (isURPInstalled && runtimeSettings.applyMode == BakeAOApplyMode.MaterialPropertyBlock)
+                {
+                    EditorGUILayout.HelpBox($"It is recommended to use {BakeAOApplyMode.MaterialInstance} when using URP. Considering updating the default Bake AO Apply Mode in the \"Project Settings/Bake AO\"", MessageType.Warning);
+
+                    if (GUILayout.Button($"Change default Bake AO Apply Mode to {BakeAOApplyMode.MaterialInstance}"))
+                        BakeAORuntimeSettingsEditor.SetDefaultApplyMode(BakeAORuntimeSettings.GetOrCreateAsset(), BakeAOApplyModeEditor.MaterialInstance);
+                }
+
+                if (!isURPInstalled && runtimeSettings.applyMode == BakeAOApplyMode.MaterialInstance)
+                {
+                    EditorGUILayout.HelpBox($"It is recommended to use {BakeAOApplyMode.MaterialPropertyBlock} when using URP. Considering updating the default Bake AO Apply Mode in the \"Project Settings/Bake AO\"\nCurrently used apply mode is", MessageType.Warning);
+
+                    if (GUILayout.Button($"Change default Bake AO apply mode to {BakeAOApplyMode.MaterialPropertyBlock}"))
+                        BakeAORuntimeSettingsEditor.SetDefaultApplyMode(BakeAORuntimeSettings.GetOrCreateAsset(), BakeAOApplyModeEditor.MaterialPropertyBlock);
+
+                    if (GUILayout.Button($"Documentation"))
+                        BakeAOUtils.OpenDocumentation();
                 }
             }
             else if (listRequest.Status >= StatusCode.Failure)
@@ -142,7 +214,6 @@ namespace ProceduralPixels.BakeAO.Editor
 
         private void OnEditorUpdate()
         {
-
             if (listRequest != null && listRequest.IsCompleted)
             {
                 Repaint();
@@ -159,7 +230,7 @@ namespace ProceduralPixels.BakeAO.Editor
 
         private void ShowURPSupportOptions(string urpVersion, string supportVersion)
         {
-            bool doesSupportExist = versionToGUID.ContainsKey(GetMajorVersion(urpVersion));
+            bool doesSupportExist = GetVersionData(urpVersion) != null;
             if (!doesSupportExist)
             {
                 EditorGUILayout.HelpBox("Bake AO support for currently installed URP does not exist. If you think that this error should not exist, please contact me at dev@proceduralpixels.com", MessageType.Error, true);
@@ -206,30 +277,38 @@ namespace ProceduralPixels.BakeAO.Editor
 
         private void InstallURPSupport(string urpVersion)
         {
-            var packageGUID = versionToGUID[GetMajorVersion(urpVersion)];
-            var packagePath = AssetDatabase.GUIDToAssetPath(packageGUID);
+            var closestVersion = GetVersionData(urpVersion);
+            var packagePath = AssetDatabase.GUIDToAssetPath(closestVersion.supportPackageGUID);
             AssetDatabase.ImportPackage(packagePath, false);
             listRequest = null;
             requestRestart = true;
         }
 
-        private int GetMajorVersion(string fullVersion)
+        private VersionData GetVersionData(string urpVersion)
         {
-            try
+            VersionData targetVersion = new VersionData(urpVersion);
+
+            VersionData closestVersion = supportedVersions[0];
+            for (int i = 1; i < supportedVersions.Count; i++)
             {
-                if (int.TryParse(fullVersion.Split('.')[0], out int majorVersion))
-                    return majorVersion;
-                else
-                    return -1;
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"Error when parsing major version of ${fullVersion}\nException:\n{e.Message}\n{e.StackTrace}");
+                var other = supportedVersions[i];
+                if (targetVersion.RawValue < other.RawValue)
+                    continue;
+
+                if (other.RawValue > closestVersion.RawValue)
+                    closestVersion = other;
             }
 
-            return -1;
+            if (closestVersion.major != targetVersion.major)
+                return null;
+
+            return closestVersion;
         }
 
+        private int GetMajorVersion(string fullVersion)
+        {
+            return new VersionData(fullVersion, "").major;
+        }
     }
 
     // Any const in the code with this attribute should contain installed URP support version. If no field exists, there is no URP support installed.

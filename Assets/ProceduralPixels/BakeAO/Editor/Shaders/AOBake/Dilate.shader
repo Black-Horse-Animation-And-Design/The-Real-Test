@@ -52,7 +52,7 @@ Shader "Hidden/BakeAO/Dilate"
             float4 frag(fragmentData input) : SV_Target
             { 
                 float texelSize = 1.0 / _TextureSize;
-                float4 color;
+                float4 color = 1.0;
 
                 if (GetColorFrom(input.uv, float2(0.0, 0.0) * texelSize, color))
                     return color;

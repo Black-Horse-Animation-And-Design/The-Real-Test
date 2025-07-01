@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -14,11 +14,9 @@ using UnityEditor;
 using System.Linq;
 using System;
 using UnityEngine.Serialization;
-using UnityEngine.UIElements;
 
 namespace ProceduralPixels.BakeAO.Editor
 {
-    //[CreateAssetMenu(menuName = "Procedural Pixels/Bake AO/Bake AO Shaders")]
     public class BakeAOSettings : SingletonScriptableObject<BakeAOSettings>
     {
         [System.Serializable]
@@ -44,6 +42,9 @@ namespace ProceduralPixels.BakeAO.Editor
 
         [SerializeField]
         internal List<LayerMask> layersInteraction = new List<LayerMask>() { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, };
+
+        [SerializeField]
+        internal bool bakeMaterialsForStaticGameObjects = false;
 
         public bool DoesObjectsInteract(int bakedObjectIndex, int otherObjectIndex)
         {
@@ -184,111 +185,6 @@ namespace ProceduralPixels.BakeAO.Editor
         {
             // Filter shaders
             return Selection.objects.Where(o => o != null).Count(o => o is Shader) > 0;
-        }
-    }
-
-    [UnityEditor.CustomEditor(typeof(BakeAOSettings))]
-    internal class BakeAOSettingsEditor : UnityEditor.Editor
-    {
-        internal class Styles
-        {
-            public static readonly GUIContent ShadersThatSupportBakeAO = EditorGUIUtility.TrTextContent("Shaders that support BakeAO", "Shaders that are recognised as supported by Bake AO. Those shaders support BakeAO properties.");
-            public static readonly GUIContent ShaderRemap = EditorGUIUtility.TrTextContent("Shader remap", "Shaders that can be swapped by BakeAO in the materials to make them support Bake AO properties");
-            public static readonly GUIContent LayersInteraction = EditorGUIUtility.TrTextContent("Layers interaction", "Defines which layer is affected by which layer when determining occluders from the scene.");
-        }
-
-        SerializedProperty shadersThatSupportBakeAOProperty;
-        SerializedProperty shaderRemapProperty;
-        SerializedProperty layersInteractionProperty;
-
-        private void OnEnable()
-        {
-            shadersThatSupportBakeAOProperty = serializedObject.FindProperty("shadersThatSupportBakeAO");
-            shaderRemapProperty = serializedObject.FindProperty("shaderRemap");
-            layersInteractionProperty = serializedObject.FindProperty("layersInteraction");
-        }
-
-        private void OnDisable()
-        {
-
-        }
-
-        public override void OnInspectorGUI()
-        {
-            if (targets.Length > 1)
-                EditorGUILayout.HelpBox("Multiple editing of BakeAOSettings is not allowed.", MessageType.Warning);
-
-            var path = AssetDatabase.GetAssetPath(target);
-
-            EditorGUILayout.HelpBox($"Those settings are stored in {path} in your project.", MessageType.Info);
-
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(shadersThatSupportBakeAOProperty, Styles.ShadersThatSupportBakeAO);
-            EditorGUILayout.PropertyField(shaderRemapProperty, Styles.ShaderRemap);
-            if (EditorGUI.EndChangeCheck())
-            {
-                serializedObject.ApplyModifiedProperties();
-                serializedObject.Update();
-                EditorUtility.SetDirty(target);
-            }
-
-            // Get all layer names up to the maximum of 32 layers
-            string[] layerNames = new string[32];
-            for (int i = 0; i < 32; i++)
-            {
-                layerNames[i] = LayerMask.LayerToName(i);
-                if (string.IsNullOrEmpty(layerNames[i]))
-                    layerNames[i] = $"Layer {i}";
-            }
-
-            bool isDirty = false;
-            EditorGUILayout.LabelField(Styles.LayersInteraction, EditorStyles.boldLabel);
-            for (int i = 0; i < 32; i++)
-            {
-                // Draw the LayerMask field
-                int currentMaskValue = (target as BakeAOSettings).layersInteraction[i];
-                int newMaskValue = EditorGUILayout.MaskField(layerNames[i], currentMaskValue, layerNames);
-
-                if (currentMaskValue != newMaskValue)
-                {
-                    (target as BakeAOSettings).layersInteraction[i] = newMaskValue;
-                    isDirty = true;
-                }
-            }
-
-            if (isDirty)
-            {
-                serializedObject.ApplyModifiedProperties();
-                serializedObject.Update();
-                EditorUtility.SetDirty(target);
-            }
-        }
-    }
-
-    class BakeAOSettingsProvider : SettingsProvider
-    {
-        UnityEditor.Editor settingsEditor;
-
-        public BakeAOSettingsProvider(string path, SettingsScope scopes, IEnumerable<string> keywords = null)
-            : base(path, scopes, keywords)
-        {
-        }
-
-        public override void OnActivate(string searchContext, VisualElement rootElement)
-        {
-            settingsEditor = UnityEditor.Editor.CreateEditor(BakeAOSettings.Instance);
-        }
-
-        public override void OnGUI(string searchContext)
-        {
-            settingsEditor.OnInspectorGUI();
-        }
-
-        [SettingsProvider]
-        public static SettingsProvider CreateBakeAOSettingProvider()
-        {
-            var provider = new BakeAOSettingsProvider("Project/Bake AO", SettingsScope.Project, GetSearchKeywordsFromGUIContentProperties<BakeAOSettingsEditor.Styles>());
-            return provider;
         }
     }
 }

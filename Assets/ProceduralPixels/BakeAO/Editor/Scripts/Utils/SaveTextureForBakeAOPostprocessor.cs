@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -45,7 +45,7 @@ namespace ProceduralPixels.BakeAO.Editor
             if (string.IsNullOrWhiteSpace(textureAssetPath)) 
                 Debug.LogError("Hey! Asset path is very wrong");
 
-            string bakingSetupJson = new SerializableBakingSetup(bakingSetup).ToJson(true);
+            string bakingSetupJson = SerializableBakingSetupLoader.ToJson(new SerializableBakingSetup(bakingSetup));
             if (!replaceExistingTexture)
                 textureAssetPath = AssetDatabase.GenerateUniqueAssetPath(textureAssetPath);
             var aoTexture = BakeAOUtils.SaveOcclusionTexture(renderedTexture, textureAssetPath, bakingSetupJson);
@@ -54,8 +54,8 @@ namespace ProceduralPixels.BakeAO.Editor
             if (bakeAOComponent != null)
             {
                 bakeAOComponent.AmbientOcclusionTexture = aoTexture;
-                bakeAOComponent.OcclusionUVSet = bakingSetup.meshesToBake[0].uv;
-                bakeAOComponent.UpdateAmbientOcclusionProperties();
+                bakeAOComponent.OcclusionUVSet = bakingSetup.originalMeshes[0].uv;
+                bakeAOComponent.Refresh();
                 afterBake?.Invoke();
             }
         }

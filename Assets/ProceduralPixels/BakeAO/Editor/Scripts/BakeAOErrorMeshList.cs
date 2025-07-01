@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -23,13 +23,13 @@ namespace ProceduralPixels.BakeAO.Editor
         [System.Serializable]
         public struct ErrorData
         {
-            public UVChannel missingUVChannel;
-            public Mesh mesh;
+            public string reason;
+            public UnityEngine.Object obj;
 
-            public ErrorData(UVChannel missingUVChannel, Mesh mesh)
+            public ErrorData(string reason, UnityEngine.Object obj)
             {
-                this.missingUVChannel = missingUVChannel;
-                this.mesh = mesh;
+                this.reason = reason;
+                this.obj = obj;
             }
         }
 
@@ -47,7 +47,7 @@ namespace ProceduralPixels.BakeAO.Editor
                 instance.Focus();
 
             instance.errors = errors.ToList();
-            instance.minSize = new Vector2(300, 500);
+            instance.minSize = new Vector2(500, 500);
             instance.maxSize = new Vector2(1000, 500);
         }
 
@@ -69,7 +69,7 @@ namespace ProceduralPixels.BakeAO.Editor
             if (guiList == null)
                 guiList = new GUIRecycledList(EditorGUIUtility.singleLineHeight, DrawErrorElement, GetErrorsCount);
 
-            EditorGUILayout.HelpBox("The list below contains all the models that failed the baking, because of missing UV.", MessageType.Error, true);
+            EditorGUILayout.HelpBox("The list below contains all the models that failed the baking.", MessageType.Error, true);
             Rect rect = EditorGUILayout.GetControlRect(false, 456);
             guiList.Draw(rect);
 
@@ -84,10 +84,10 @@ namespace ProceduralPixels.BakeAO.Editor
         private void DrawErrorElement(int index, Rect rect)
         {
             var error = errors[index];
-            Rect fieldRect = new Rect(rect.x + 100, rect.y, rect.width - 100, rect.height);
-            Rect messageRect = new Rect(rect.x, rect.y, 100, rect.height);
-            EditorGUI.ObjectField(fieldRect, error.mesh, typeof(Mesh), false);
-            EditorGUI.LabelField(messageRect, $"Missing {error.missingUVChannel}");
+            Rect fieldRect = new Rect(rect.x + 300, rect.y, rect.width - 300, rect.height);
+            Rect messageRect = new Rect(rect.x, rect.y, 300, rect.height);
+            EditorGUI.ObjectField(fieldRect, error.obj, typeof(UnityEngine.Object), true);
+            EditorGUI.LabelField(messageRect, error.reason);
         }
 
         public static void AddError(ErrorData errorData)
