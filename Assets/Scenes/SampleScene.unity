@@ -1128,36 +1128,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Highres Camera
       objectReference: {fileID: 0}
-    - target: {fileID: 4272036053241473779, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
-        type: 3}
-      propertyPath: m_BackGroundColor.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4272036053241473779, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
-        type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4272036053241473779, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
-        type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4272036053241473779, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
-        type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5928541583657339041, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
-        type: 3}
-      propertyPath: m_Antialiasing
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5928541583657339041, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
-        type: 3}
-      propertyPath: m_RenderPostProcessing
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7743032761363420365, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
         type: 3}
       propertyPath: m_LocalPosition.x
