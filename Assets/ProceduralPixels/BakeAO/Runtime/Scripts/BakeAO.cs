@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -17,9 +17,17 @@ namespace ProceduralPixels.BakeAO
     [HelpURL("https://proceduralpixels.com/BakeAO/Documentation/BakeAOComponent")]
     public sealed class BakeAO : GenericBakeAO
     {
-        public const string Version = "1.0.1";
+        public const string Version = "1.2.1";
 
-        protected override void SetupPropertyBlock(MaterialPropertyBlock propertyBlock)
+        public override void SetupMaterialProperties(Material material)
+        {
+            material.SetTexture(occlusionMapStandardID, ambientOcclusionTexture);
+            material.SetFloat(occlusionStrengthStandardID, occlusionStrength);
+            material.SetInt(occlusionUVSetStandardID, (int)occlusionUVSet);
+            material.SetInt(applyOcclusionToDiffuseStandardID, applyOcclusionIntoDiffuse ? 1 : 0);
+        }
+
+        public override void SetupPropertyBlock(MaterialPropertyBlock propertyBlock)
         {
             propertyBlock.SetTexture(occlusionMapStandardID, ambientOcclusionTexture);
             propertyBlock.SetFloat(occlusionStrengthStandardID, occlusionStrength);

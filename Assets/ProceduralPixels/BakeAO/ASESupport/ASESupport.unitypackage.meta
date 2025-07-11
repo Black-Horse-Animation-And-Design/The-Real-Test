@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 5c20afcd95c82564687df4496d4d53cf
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 263743
+  packageName: Bake AO - Easy ambient occlusion baking
+  packageVersion: 1.2.0
+  assetPath: Assets/ProceduralPixels/BakeAO/ASESupport/ASESupport.unitypackage
+  uploadId: 754736

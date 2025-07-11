@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -44,6 +44,9 @@ namespace ProceduralPixels.BakeAO.Editor
 
         public static Mesh FirstOrDefaultMesh(UnityEngine.Object obj)
         {
+            if (obj == null)
+                return null;
+
             if (obj is Mesh mesh)
                 return mesh;
 
@@ -76,6 +79,45 @@ namespace ProceduralPixels.BakeAO.Editor
         {
             outMesh = FirstOrDefaultMesh(obj);
             return outMesh != null;
+        }
+
+        public static bool TryGetOrCreateBakeAOComponent(UnityEngine.Object obj, out GenericBakeAO outGenericBakeAO)
+        {
+            if (TryGetBakeAOComponent(obj, out outGenericBakeAO))
+                return true;
+
+            if (obj is GameObject go)
+            {
+                outGenericBakeAO = go.AddComponent<BakeAO>();
+                EditorUtility.SetDirty(go);
+                return outGenericBakeAO != null;
+            }
+            else if (obj is Component component)
+            {
+                outGenericBakeAO = component.gameObject.AddComponent<BakeAO>();
+                EditorUtility.SetDirty(component.gameObject);
+                return outGenericBakeAO != null;
+            }
+
+            return false;
+        }
+
+        public static bool TryGetBakeAOComponent(UnityEngine.Object obj, out GenericBakeAO outGenericBakeAO)
+        {
+            outGenericBakeAO = null;
+
+            if (obj is GameObject go)
+            {
+                outGenericBakeAO = go.GetComponent<GenericBakeAO>();
+                return outGenericBakeAO != null;
+            }
+            else if (obj is Component component)
+            {
+                outGenericBakeAO = component.GetComponent<GenericBakeAO>();
+                return outGenericBakeAO != null;
+            }
+
+            return false;
         }
 
         public static bool TryGetMaterial(UnityEngine.Object obj, out Material outMaterial)
@@ -138,6 +180,9 @@ namespace ProceduralPixels.BakeAO.Editor
 
         public static Mesh FirstOrDefaultMesh(Component component)
         {
+            if (component == null)
+                return null;
+
             return FirstOrDefaultMesh(component.gameObject);
         }
 
@@ -457,7 +502,7 @@ namespace ProceduralPixels.BakeAO.Editor
             return (assetPath != null && obj != null);
         }
 
-        public static bool TryGetBakingSetup(Mesh mesh, UVChannel uvChannel, BakingQuality quality, out BakingSetup bakingSetup)
+        public static bool TryGetBakingSetup(Mesh mesh, long targetSubmeshFlags, long occluderSubmeshFlags, UVChannel uvChannel, BakingQuality quality, out BakingSetup bakingSetup)
         {
             bakingSetup = BakingSetup.Default;
 
@@ -465,8 +510,9 @@ namespace ProceduralPixels.BakeAO.Editor
                 return false;
 
             bakingSetup.quality = quality;
-            bakingSetup.meshesToBake.Add(new MeshContext(mesh, uvChannel));
-            bakingSetup.occluders.Add(new MeshContext(mesh));
+            bakingSetup.meshesToBake.Add(new MeshContext(mesh, targetSubmeshFlags, uvChannel));
+            bakingSetup.originalMeshes = bakingSetup.meshesToBake.ToList();
+            bakingSetup.occluders.Add(new MeshContext(mesh, occluderSubmeshFlags));
             return true;
         }
 
@@ -482,7 +528,7 @@ namespace ProceduralPixels.BakeAO.Editor
             return false;
         }
 
-        public static bool TryGetBakingSetup(MeshFilter meshFilter, UVChannel uvChannel, BakingQuality quality, ContextBakingSettings contextSettings, out BakingSetup bakingSetup)
+        public static bool TryGetBakingSetup(MeshFilter meshFilter, long targetSubmeshFlags, long occluderSubmeshFlags, UVChannel uvChannel, BakingQuality quality, ContextBakingSettings contextSettings, out BakingSetup bakingSetup)
         {
             bakingSetup = BakingSetup.Default;
 
@@ -490,15 +536,16 @@ namespace ProceduralPixels.BakeAO.Editor
                 return false;
 
             bakingSetup.quality = quality;
-            bakingSetup.meshesToBake.Add(new MeshContext(meshFilter, uvChannel));
-            bakingSetup.occluders.Add(new MeshContext(meshFilter));
+            bakingSetup.meshesToBake.Add(new MeshContext(meshFilter, targetSubmeshFlags, uvChannel));
+            bakingSetup.originalMeshes = bakingSetup.meshesToBake.ToList();
+            bakingSetup.occluders.Add(new MeshContext(meshFilter, occluderSubmeshFlags));
 
             AddContextOccluders(bakingSetup, contextSettings, meshFilter.gameObject);
 
             return true;
         }
 
-        public static bool TryGetBakingSetup(SkinnedMeshRenderer skinnedRenderer, UVChannel uvChannel, BakingQuality quality, ContextBakingSettings contextSettings, out BakingSetup bakingSetup)
+        public static bool TryGetBakingSetup(SkinnedMeshRenderer skinnedRenderer, long targetSubmeshFlags, long occluderSubmeshFlags, UVChannel uvChannel, BakingQuality quality, ContextBakingSettings contextSettings, out BakingSetup bakingSetup)
         {
             bakingSetup = BakingSetup.Default;
 
@@ -506,12 +553,41 @@ namespace ProceduralPixels.BakeAO.Editor
                 return false;
 
             bakingSetup.quality = quality;
-            bakingSetup.meshesToBake.Add(new MeshContext(skinnedRenderer, uvChannel));
-            bakingSetup.occluders.Add(new MeshContext(skinnedRenderer));
+            bakingSetup.originalMeshes = new() { new MeshContext(skinnedRenderer, targetSubmeshFlags, uvChannel) };
+            bakingSetup.meshesToBake.Add(GetBakedSkinnedMeshContext(skinnedRenderer, targetSubmeshFlags, uvChannel));
+            bakingSetup.occluders.Add(GetBakedSkinnedMeshContext(skinnedRenderer, occluderSubmeshFlags, uvChannel));
 
             bakingSetup.AddContextOccluders(contextSettings, skinnedRenderer.gameObject);
 
             return true;
+        }
+
+        public static MeshContext GetMeshContext(MeshRenderer meshrenderer, int submeshFlags, UVChannel uvChannel)
+        {
+            MeshContext meshContext = new MeshContext(meshrenderer, submeshFlags, uvChannel);
+
+            OccluderParameters occluderParameters = meshrenderer.GetComponent<OccluderParameters>();
+            if (occluderParameters != null)
+                meshContext.transparency = Mathf.Clamp01(1.0f - occluderParameters.occluderStrength);
+
+            return meshContext;
+        }
+
+        public static MeshContext GetBakedSkinnedMeshContext(SkinnedMeshRenderer skinnedMeshRenderer, long submeshFlags, UVChannel uvChannel)
+        {
+            Mesh mesh = new Mesh();
+            mesh.name = skinnedMeshRenderer.sharedMesh.name + "_BakeAO_SkinningSnapshot";
+            skinnedMeshRenderer.BakeMesh(mesh);
+            mesh.RecalculateBounds();
+
+            MeshContext context = new MeshContext(mesh, submeshFlags, uvChannel, MeshContextUseFlags.IsTemporary | MeshContextUseFlags.DontCombine);
+            context.objectToWorld = Matrix4x4.TRS(skinnedMeshRenderer.transform.position, skinnedMeshRenderer.transform.rotation, Vector3.one);
+
+            OccluderParameters occluderParameters = skinnedMeshRenderer.GetComponent<OccluderParameters>();
+            if (occluderParameters != null)
+                context.transparency = Mathf.Clamp01(1.0f - occluderParameters.occluderStrength);
+
+            return context;
         }
 
         public static Bounds TransformBounds(Bounds bounds, Matrix4x4 matrix)
@@ -567,7 +643,7 @@ namespace ProceduralPixels.BakeAO.Editor
                     .Where(t => t.enabled && t.drawHeightmap)
                     .Select(t => TerrainUtility.GetTerrainMeshAtBounds(t, bakedMeshesBounds))
                     .Where(m => m != null)
-                    .Select(m => new MeshContext(m, UVChannel.UV0, MeshContextUseFlags.IsNotUsedInAnyAsset | MeshContextUseFlags.ShouldApplyNormalBias));
+                    .Select(m => new MeshContext(m, -1, UVChannel.UV0, MeshContextUseFlags.IsNotUsedInAnyAsset | MeshContextUseFlags.ShouldApplyNormalBias));
 
                 bakingSetup.occluders.AddRange(terrainMeshes);
             }
@@ -575,8 +651,8 @@ namespace ProceduralPixels.BakeAO.Editor
             mrOccluders.RemoveAll(mr => !CanBeBaked(mr) || !mr.bounds.Intersects(bakedMeshesBounds) || mr.gameObject == gameObject);
             smrOccluders.RemoveAll(smr => !CanBeBaked(smr) || !smr.bounds.Intersects(bakedMeshesBounds) || smr.gameObject == gameObject);
 
-            bakingSetup.occluders.AddRange(mrOccluders.Select(mr => new MeshContext(mr, UVChannel.UV0, MeshContextUseFlags.ShouldApplyNormalBias)));
-            bakingSetup.occluders.AddRange(smrOccluders.Select(smr => new MeshContext(smr, UVChannel.UV0, MeshContextUseFlags.ShouldApplyNormalBias)));
+            bakingSetup.occluders.AddRange(mrOccluders.Select(mr => GetMeshContext(mr, -1, UVChannel.UV0)));
+            bakingSetup.occluders.AddRange(smrOccluders.Select(smr => GetBakedSkinnedMeshContext(smr, -1, UVChannel.UV0)));
         }
 
         public static float GetUVToWSRatio(MeshContext meshContext)
@@ -673,6 +749,7 @@ namespace ProceduralPixels.BakeAO.Editor
         public static Mesh CloneMesh(Mesh source)
         {
             Mesh mesh = new Mesh();
+            mesh.indexFormat = IndexFormat.UInt32; // Other value can produce errors when using CombineInstance, even if it is used to just clone the mesh with UInt16 format.
 
             // Using unity combine mesh to combine a single mesh into another one, making a full copy.
             CombineInstance[] instancesToCombine = new CombineInstance[source.subMeshCount];
@@ -691,6 +768,81 @@ namespace ProceduralPixels.BakeAO.Editor
 
             mesh.name = source.name;
             return mesh;
+        }
+
+        public struct GUIRectLayout
+        {
+            public Rect ControlRect { get; private set; }
+
+            public GUIRectLayout(Rect controlRect)
+            {
+                this.ControlRect = controlRect;
+            }
+
+            public Rect FromLeftFrac(float factor)
+            {
+                float width = ControlRect.width * factor;
+                return FromLeft(width);
+            }
+
+            public Rect FromRightFrac(float factor)
+            {
+                float width = ControlRect.width * factor;
+                return FromRight(width);
+            }
+
+            public Rect FromTopFrac(float factor)
+            {
+                float height = ControlRect.width * factor;
+                return FromTop(factor);
+            }
+
+            public Rect FromBottomFrac(float factor)
+            {
+                float height = ControlRect.width * factor;
+                return FromBottom(height);
+            }
+
+            public Rect FromLeft(float width)
+            {
+                var newRect = new Rect(ControlRect.x, ControlRect.y, width, ControlRect.height);
+                ControlRect = new Rect(ControlRect.x + width, ControlRect.y, ControlRect.width - width, ControlRect.height);
+                return newRect;
+            }
+
+            public Rect FromRight(float width)
+            {
+                var newRect = new Rect(ControlRect.x + ControlRect.width - width, ControlRect.y, width, ControlRect.height);
+                ControlRect = new Rect(ControlRect.x, ControlRect.y, ControlRect.width - width, ControlRect.height);
+                return newRect;
+            }
+
+            public Rect FromTop(float height)
+            {
+                var newRect = new Rect(ControlRect.x, ControlRect.y, ControlRect.width, height);
+                ControlRect = new Rect(ControlRect.x, ControlRect.y + height, ControlRect.width, ControlRect.height - height);
+                return newRect;
+            }
+
+            public Rect FromBottom(float height)
+            {
+                var newRect = new Rect(ControlRect.x, ControlRect.y + ControlRect.height - height, ControlRect.width, height);
+                ControlRect = new Rect(ControlRect.x, ControlRect.y, ControlRect.width, ControlRect.height - height);
+                return newRect;
+            }
+
+            public void DivideHorizontally(out Rect firstRect, out Rect secondRect)
+            {
+                firstRect = new Rect(ControlRect.x, ControlRect.x, ControlRect.width / 2, ControlRect.height);
+                secondRect = new Rect(ControlRect.x, ControlRect.x + (ControlRect.width / 2), ControlRect.width / 2, ControlRect.height);
+            }
+
+            public Rect GetReminder()
+            {
+                var reminder = ControlRect;
+                ControlRect = new Rect(ControlRect.x, ControlRect.y, 0, 0);
+                return reminder;
+            }
         }
 
         public struct HorizontalRectLayout
@@ -749,6 +901,11 @@ namespace ProceduralPixels.BakeAO.Editor
             {
                 return new Vector3(a.x < 0 ? -1 : 1, a.y < 0 ? -1 : 1, a.z < 0 ? -1 : 1);
             }
+        }
+
+        internal static void OpenDocumentation()
+        {
+            Application.OpenURL("https://proceduralpixels.com/BakeAO/Documentation");
         }
 
         public struct FastBoundsTransform

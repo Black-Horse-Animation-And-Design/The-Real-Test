@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -305,12 +305,19 @@ namespace ProceduralPixels.BakeAO.Editor
                 this.bakingSetup = new SerializableBakingSetup(bakingSetup);
                 this.bakePostprocessor = postprocessor;
                 this.context = context;
-                this.name = context != null ? context.name : bakingSetup.meshesToBake[0].mesh.name;
+                this.name = context != null ? context.name : bakingSetup.originalMeshes[0].mesh.name;
                 SerializeTemporaryMeshes();
             }
 
             private void SerializeTemporaryMeshes()
             {
+                for (int i = 0; i < bakingSetup.originalMeshes.Count; i++)
+                {
+                    var meshContext = bakingSetup.originalMeshes[i];
+                    meshContext.SerializeTemporaryMesh();
+                    bakingSetup.originalMeshes[i] = meshContext;
+                }
+
                 for (int i = 0; i < bakingSetup.meshesToBake.Count; i++)
                 {
                     var meshContext = bakingSetup.meshesToBake[i];
@@ -338,7 +345,9 @@ namespace ProceduralPixels.BakeAO.Editor
 
             public IEnumerable<Mesh> GetAllMeshes()
             {
-                var allContexts = bakingSetup.meshesToBake.Concat(bakingSetup.occluders);
+                var allContexts = bakingSetup.originalMeshes
+                    .Concat(bakingSetup.meshesToBake)
+                    .Concat(bakingSetup.occluders);
                 return allContexts.Select(c => c.GetMesh()).Distinct();
             }
         }
@@ -374,6 +383,8 @@ namespace ProceduralPixels.BakeAO.Editor
             else
                 EditorGUI.ProgressBar(progressBarRect, 1.0f, "No active tasks");
 
+            BakeAOPreferences.instance.DrawBakingPriorityProperty();
+
             var bakingControlButtonRect = new HorizontalRectLayout(EditorGUILayout.GetControlRect(false, EditorGUIUtility.singleLineHeight));
             if (state == State.Baking)
             {
@@ -398,7 +409,7 @@ namespace ProceduralPixels.BakeAO.Editor
             if (listOfProcesses == null)
                 listOfProcesses = new GUIRecycledList(EditorGUIUtility.singleLineHeight * 1.0f, DrawTaskElementGUI, GetNumberOfProcessGUIElements);
 
-            float height = content.height - 110 - EditorGUIUtility.singleLineHeight;
+            float height = content.height - 124 - EditorGUIUtility.singleLineHeight;
             var listAreaRect = EditorGUILayout.GetControlRect(false, height);
             listOfProcesses.Draw(listAreaRect);
 

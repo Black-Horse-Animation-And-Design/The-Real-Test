@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: bb6e35de6cebf594da7347cfd7d7a568
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 263743
+  packageName: Bake AO - Easy ambient occlusion baking
+  packageVersion: 1.2.0
+  assetPath: Assets/ProceduralPixels/BakeAO/URPSupport/URP17.unitypackage
+  uploadId: 754736

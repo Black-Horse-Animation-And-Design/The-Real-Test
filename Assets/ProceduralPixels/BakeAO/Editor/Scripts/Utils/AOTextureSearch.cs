@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -185,9 +185,12 @@ namespace ProceduralPixels.BakeAO.Editor
 
             try
             {
-                var bakingSetup = SerializableBakingSetup.FromJson(aoTextureImporter.userData).GetBakingSetup();
+                var bakingSetup = SerializableBakingSetupLoader.FromJson(aoTextureImporter.userData).GetBakingSetup();
                 genericBakingSetup = GenericBakingSetup.Default;
-                genericBakingSetup.uvChannel = bakingSetup.meshesToBake[0].uv;
+                genericBakingSetup.uvChannel = bakingSetup.originalMeshes[0].uv;
+                genericBakingSetup.targetSubmeshFlags = bakingSetup.originalMeshes[0].submeshFlags;
+                if (bakingSetup.occluders.Count > 0)
+                    genericBakingSetup.occluderSubmeshFlags = bakingSetup.occluders[0].submeshFlags;
                 genericBakingSetup.quality = bakingSetup.quality;
                 genericBakingSetup.contextBakingSettings = new ContextBakingSettings(bakingSetup.Occluders.Count > 1);
             }
@@ -215,7 +218,7 @@ namespace ProceduralPixels.BakeAO.Editor
                 foreach (var textureImporter in allTextureImportersWithCustomData)
                 {
                     SerializableBakingSetup serializableBakingSetup = textureImporter.bakingSetup;
-                    if (serializableBakingSetup.meshesToBake.Any(context => context.meshFileID == meshLocalFileID && meshGUID.Equals(context.meshGUID)))
+                    if (serializableBakingSetup.originalMeshes.Any(context => context.meshFileID == meshLocalFileID && meshGUID.Equals(context.meshGUID)))
                     {
                         aoTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(textureImporter.importer.assetPath);
                         bakingSetup = serializableBakingSetup;
@@ -239,7 +242,7 @@ namespace ProceduralPixels.BakeAO.Editor
             {
                 this.importer = textureImporter;
                 if (!string.IsNullOrWhiteSpace(textureImporter.userData))
-                    bakingSetup = SerializableBakingSetup.FromJson(textureImporter.userData);
+                    bakingSetup = SerializableBakingSetupLoader.FromJson(textureImporter.userData);
             }
         }
 
@@ -252,7 +255,7 @@ namespace ProceduralPixels.BakeAO.Editor
                 for (int i = 0; i < importers.Length; i++)
                 {
                     AOTextureImporter textureImporter = importers[i];
-                    if (textureImporter.bakingSetup.meshesToBake.Any(context => context.meshFileID == meshLocalFileID && meshGUID.Equals(context.meshGUID)))
+                    if (textureImporter.bakingSetup.originalMeshes.Any(context => context.meshFileID == meshLocalFileID && meshGUID.Equals(context.meshGUID)))
                     {
                         aoTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(textureImporter.importer.assetPath);
                         bakingSetup = textureImporter.bakingSetup;
@@ -290,7 +293,7 @@ namespace ProceduralPixels.BakeAO.Editor
                         continue;
 
                     SerializableBakingSetup serializableBakingSetup = textureImporter.bakingSetup;
-                    if (serializableBakingSetup.meshesToBake.Any(context => context.meshFileID == meshLocalFileID && meshGUID.Equals(context.meshGUID)))
+                    if (serializableBakingSetup.originalMeshes.Any(context => context.meshFileID == meshLocalFileID && meshGUID.Equals(context.meshGUID)))
                         result.Add(new TextureSearchResult(AssetDatabase.LoadAssetAtPath<Texture2D>(textureImporter.importer.assetPath), serializableBakingSetup));
                 }
             }

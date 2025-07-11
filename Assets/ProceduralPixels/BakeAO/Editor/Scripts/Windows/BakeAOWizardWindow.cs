@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -77,6 +77,9 @@ namespace ProceduralPixels.BakeAO.Editor
 
         bool requireRepaint = false;
 
+        private const float BakePostprocessButtonSize = 130.0f;
+        private const float MultiBakeOptionSize = 100.0f;
+
         private void Update()
         {
             if (requireRepaint)
@@ -111,7 +114,8 @@ namespace ProceduralPixels.BakeAO.Editor
                 }
             }
 
-            var sourceObjectsGUIRect = EditorGUILayout.GetControlRect(true, windowHeight - 436);
+            float bakingSettingsHeight = BakeAOPreferences.instance.showSubmeshSelectionInBakingSettings ? 482 : 442;
+            var sourceObjectsGUIRect = EditorGUILayout.GetControlRect(true, windowHeight - bakingSettingsHeight);
             sourceObjectsGUI.Draw(sourceObjectsGUIRect);
 
             dragArea.dragRect = sourceObjectsGUIRect;
@@ -146,6 +150,7 @@ namespace ProceduralPixels.BakeAO.Editor
                 {
                     EditorGUI.indentLevel++;
                     selectedBakingSetupsEditor.OnInspectorGUI();
+                    EditorGUILayout.PropertyField(selectedBakingSetupsEditor.bakeAOComponentOptionProperty);
                     EditorGUI.indentLevel--;
                 }
 
@@ -162,37 +167,42 @@ namespace ProceduralPixels.BakeAO.Editor
                 wasPresetWindowVisible = isPresetWindowVisible;
             }
 
-            const float DotsButtonSize = 21.0f;
             EditorGUILayout.Space();
 
-            HorizontalRectLayout bakeButtonLayout = new HorizontalRectLayout(EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight));
-            
-            if (GUI.Button(bakeButtonLayout.GetFromRight(DotsButtonSize), "..."))
+            GUIRectLayout bakeButtonLayout = new GUIRectLayout(EditorGUILayout.GetControlRect(true, EditorGUIUtility.singleLineHeight));
+
+            //if (GUI.Button(bakeButtonLayout.FromRight(DotsButtonSize), "..."))
+            //{
+            //    GenericMenu menu = new GenericMenu();
+            //    menu.AddItem(new GUIContent("Bake all and replace existing textures"), false, () =>
+            //    {
+            //        bool hasAnyError = StartBaking(true);
+            //        RefreshSourceObjectsEditor();
+            //        ActiveTasksWindow.FocusOrOpen(GetType());
+            //    });
+            //    menu.ShowAsContext();
+            //}
+
+            //bakeButtonLayout.FromRight(2);
+            if (selectedBakingSetupsEditor != null)
             {
-                GenericMenu menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Bake all and replace existing textures"), false, () =>
+                EditorGUI.PropertyField(bakeButtonLayout.FromRight(BakePostprocessButtonSize), selectedBakingSetupsEditor.textureAssetPostprocessActionProperty, GUIContent.none);
+                // EditorGUI.PropertyField(bakeButtonLayout.FromRight(MultiBakeOptionSize), selectedBakingSetupsEditor.multiTargetBakingOptionProperty, GUIContent.none);
+
+                if (GUI.Button(bakeButtonLayout.GetReminder(), "Bake selected"))
                 {
-                    bool hasAnyError = StartBaking(true);
+                    StartBaking();
+
                     RefreshSourceObjectsEditor();
                     ActiveTasksWindow.FocusOrOpen(GetType());
-                });
-                menu.ShowAsContext();
-            }
-
-            bakeButtonLayout.GetFromRight(2);
-
-            if (GUI.Button(bakeButtonLayout.GetReminder(), "Bake all"))
-            {
-                bool hasAnyError = StartBaking(false);
-
-                RefreshSourceObjectsEditor();
-                ActiveTasksWindow.FocusOrOpen(GetType());
+                    this.Focus();
+                }
             }
 
             EditorGUILayout.EndScrollView();
         }
 
-        private bool StartBaking(bool overrideExistingTextures = false)
+        private bool StartBaking()
         {
             bool hasAnyError = false;
 
@@ -201,17 +211,21 @@ namespace ProceduralPixels.BakeAO.Editor
                 var sourceObject = sourceObjects[i];
 
                 if (sourceObject == null)
+                {
+                    sourceObjects.RemoveAt(i);
+                    continue;
+                }
+
+                if (!sourceObject.selected)
                     continue;
 
                 if (sourceObject.genericBakingSetup.ArePathsValid())
                 {
-                    if (sourceObject.Bake(overrideExistingTextures))
+                    if (sourceObject.Bake())
                         sourceObjects.RemoveAt(i);
                     else
                         hasAnyError = true;
                 }
-                else
-                    Debug.LogWarning("Some of the objects have invalid paths and can't be baked. Please make sure that all the paths are valid to start baking.");
             }
 
             return hasAnyError;
@@ -301,10 +315,19 @@ namespace ProceduralPixels.BakeAO.Editor
                     return;
                 }
 
+                var selectedSourceObjects = sourceObjects.Where(s => s.selected);
+
                 selectedBakingSetups.Clear();
-                selectedBakingSetups.AddRange(sourceObjects.Where(s => s.selected).Select(s => s.genericBakingSetup));
+                selectedBakingSetups.AddRange(selectedSourceObjects.Select(s => s.genericBakingSetup));
 
                 selectedBakingSetupsEditor = (GenericBakingSetupEditor)UnityEditor.Editor.CreateEditor(selectedBakingSetups.ToArray(), typeof(GenericBakingSetupEditor));
+
+                if (selectedBakingSetups.Count == 1)
+                {
+                    var bakeContext = selectedSourceObjects.First().bakeContext;
+                    if (bakeContext is Component component)
+                        selectedBakingSetupsEditor.SetContext(component.GetComponent<Renderer>());
+                }
             }
 
             Repaint();
@@ -525,36 +548,9 @@ namespace ProceduralPixels.BakeAO.Editor
                 return instance;
             }
 
-            public bool Bake(bool overrideExistingTexture = false)
+            public bool Bake()
             {
-                if (genericBakingSetup.TryGetBakingSetup(bakeContext, out var bakingSetup))
-                {
-                    var sourceMesh = bakingSetup.meshesToBake[0].mesh;
-
-                    PathResolver resolver = new PathResolver(bakeContext, sourceMesh);
-                    resolver.fallbackMeshFolderPath = genericBakingSetup.meshFolderFallback;
-
-                    string filePath = resolver.Resolve(genericBakingSetup.filePath);
-                    filePath = PathUtils.EnsureContainsExtension(filePath, ".png");
-
-                    PathUtils.EnsureDirectoryExists(PathUtils.GetContainingFolderPath(filePath));
-
-                    foreach (var meshToBake in bakingSetup.meshesToBake)
-                    {
-                        if (!meshToBake.mesh.DoesHaveUVSet(meshToBake.uv))
-                        {
-                            BakeAOErrorMeshList.AddError(new BakeAOErrorMeshList.ErrorData(meshToBake.uv, meshToBake.mesh));
-                            return false;
-                        }
-                    }
-
-                    BakeAndSaveTextureToAssets(bakingSetup, filePath, overrideExistingTexture, bakeContext);
-
-                    return true;
-                }
-
-                Debug.LogError("Error when getting baking setup.");
-                return false;
+                return genericBakingSetup.TryStartBaking(bakeContext, null);
             }
         }
 

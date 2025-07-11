@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -21,13 +21,19 @@ namespace ProceduralPixels.BakeAO.Editor
     internal class GenericBakingSetupEditor : UnityEditor.Editor
     {
         public SerializedProperty uvChannelProperty { get; private set; }
+        public SerializedProperty targetSubmeshFlagsProperty { get; private set; }
+        public SerializedProperty occluderSubmeshFlagsProperty { get; private set; }
         public SerializedProperty qualityProperty {get; private set; }
         public SerializedProperty contextBakingSettingsProperty { get; private set; }
         public SerializedProperty filePathProperty {get; private set; }
         public SerializedProperty meshFolderFallbackProperty {get; private set; }
+        public SerializedProperty textureAssetPostprocessActionProperty {get; private set; }
+        public SerializedProperty multiTargetBakingOptionProperty { get; private set; }
+        public SerializedProperty bakeAOComponentOptionProperty { get; private set; }
         public bool isPathValid { get; private set; }
 
         private bool isInitialized = false;
+        private Renderer rendererContext = null;
 
         private void Awake()
         {
@@ -44,10 +50,15 @@ namespace ProceduralPixels.BakeAO.Editor
             try
             {
                 uvChannelProperty = serializedObject.FindProperty("uvChannel");
+                targetSubmeshFlagsProperty = serializedObject.FindProperty("targetSubmeshFlags");
+                occluderSubmeshFlagsProperty = serializedObject.FindProperty("occluderSubmeshFlags");
                 qualityProperty = serializedObject.FindProperty("quality");
                 contextBakingSettingsProperty = serializedObject.FindProperty("contextBakingSettings");
                 filePathProperty = serializedObject.FindProperty("filePath");
                 meshFolderFallbackProperty = serializedObject.FindProperty("meshFolderFallback");
+                textureAssetPostprocessActionProperty = serializedObject.FindProperty("textureAssetPostprocessAction");
+                multiTargetBakingOptionProperty = serializedObject.FindProperty("multiTargetBakingOption");
+                bakeAOComponentOptionProperty = serializedObject.FindProperty("bakeAOComponentOption");
                 isInitialized = true;
             }
 #pragma warning disable CS0168 // Variable is declared but never used
@@ -61,6 +72,16 @@ namespace ProceduralPixels.BakeAO.Editor
             }
         }
 
+        public void DrawPostprocessGUI(bool drawTextureAssetPostprocessAction, bool drawMultiTargetBakingOptionProperty, bool drawBakeAOComponentOptionProperty)
+        {
+            if (drawTextureAssetPostprocessAction)
+                EditorGUILayout.PropertyField(textureAssetPostprocessActionProperty);
+            if (drawMultiTargetBakingOptionProperty)
+                EditorGUILayout.PropertyField(multiTargetBakingOptionProperty);
+            if (drawBakeAOComponentOptionProperty)
+                EditorGUILayout.PropertyField(bakeAOComponentOptionProperty);
+        }
+
         public override void OnInspectorGUI()
         {
             Initialize();
@@ -71,6 +92,19 @@ namespace ProceduralPixels.BakeAO.Editor
 
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(uvChannelProperty, false);
+
+            if (BakeAOPreferences.instance.showSubmeshSelectionInBakingSettings)
+            {
+                DrawSubmeshFlagsProperty(targetSubmeshFlagsProperty, rendererContext);
+                DrawSubmeshFlagsProperty(occluderSubmeshFlagsProperty, rendererContext);
+            }
+            else
+            {
+                targetSubmeshFlagsProperty.longValue = -1;
+                filePathProperty.serializedObject.ApplyModifiedProperties();
+                filePathProperty.serializedObject.Update();
+            }    
+
             EditorGUILayout.PropertyField(qualityProperty, true);
             EditorGUILayout.PropertyField(contextBakingSettingsProperty, true);
 
@@ -177,6 +211,40 @@ namespace ProceduralPixels.BakeAO.Editor
                 serializedObject.ApplyModifiedProperties();
                 serializedObject.Update();
             }
+        }
+
+        string[] flagDisplayValues;
+
+        private void DrawSubmeshFlagsProperty(SerializedProperty property, Renderer context)
+        {
+            Mesh mesh = BakeAOUtils.FirstOrDefaultMesh(context);
+
+            if (mesh != null && context != null)
+            {
+                Material[] materials = context.sharedMaterials; 
+                if (flagDisplayValues == null || flagDisplayValues.Length != mesh.subMeshCount)
+                    flagDisplayValues = new string[mesh.subMeshCount];
+
+                for (int i = 0; i < mesh.subMeshCount; i++)
+                {
+                    flagDisplayValues[i] = i.ToString();
+                    if (i < materials.Length && materials[i] != null)
+                        flagDisplayValues[i] = $"{i}: {materials[i].name}";
+                }
+            }
+            else
+            {
+                flagDisplayValues = new string[32];
+                for (int i = 0; i < 32; i++)
+                    flagDisplayValues[i] = i.ToString();
+            }
+
+            property.longValue = EditorGUILayout.MaskField(property.displayName, (int)property.longValue, flagDisplayValues);
+        }
+
+        public void SetContext(Renderer rendererContext)
+        {
+            this.rendererContext = rendererContext;
         }
     }
 }

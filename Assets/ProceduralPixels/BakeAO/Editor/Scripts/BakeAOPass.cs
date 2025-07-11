@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -230,7 +230,7 @@ namespace ProceduralPixels.BakeAO.Editor
             float maxOccluderDistance = bakingSetup.quality.MaxOccluderDistance;
             if (combinedOccluder == null)
                 combinedOccluder = CreateCombinedOccluder(bakingSetup.occluders);
-            //TraceIntoRenderTarget(cmd, ShaderUniforms._TracerTarget, Vector2.one * (int)bakingSetup.BakingQuality.TextureSize, ShaderUniforms._TracerDepthTarget, sample, tracerFov, maxOccluderDistance, bakingSetup, combinedOccluder);
+ 
             TraceIntoRenderTarget(cmd, ShaderUniforms._TracerTarget, Vector2.one * (int)bakingSetup.BakingQuality.TextureSize, ShaderUniforms._TracerDepthTarget, sample, tracerFov, maxOccluderDistance, bakingSetup, combinedOccluder);
         }
 
@@ -238,44 +238,57 @@ namespace ProceduralPixels.BakeAO.Editor
 
         private List<MeshContext> CreateCombinedOccluder(List<MeshContext> occluders)
         {
+            // TODO: Debug if transparent meshes are handled properly
+
             if (allocatedAssets == null)
                 allocatedAssets = new List<Object>();
 
-            var combineInstancesNormalBias = occluders.Where(o => !o.useFlags.HasFlag(MeshContextUseFlags.DontCombine) && o.useFlags.HasFlag(MeshContextUseFlags.ShouldApplyNormalBias)).SelectMany(o => o.GetCombineInstances()).ToArray();
-            var combineInstancesNoBias = occluders.Where(o => !o.useFlags.HasFlag(MeshContextUseFlags.DontCombine) && !o.useFlags.HasFlag(MeshContextUseFlags.ShouldApplyNormalBias)).SelectMany(o => o.GetCombineInstances()).ToArray();
+            // Divide occluders into transparent and opaque
+            var transparentOccluders = occluders.Where(o => o.IsTransparent());
+            var opaqueOccluders = occluders.Where(o => !o.IsTransparent());
 
-            var combinedOccluders = occluders.Where(o => o.useFlags.HasFlag(MeshContextUseFlags.DontCombine));
+            // Opaque occluders can be combined into bigger meshes if possible.
+            var nonCombinedOpaqueOccluders = opaqueOccluders.Where(o => o.useFlags.HasFlag(MeshContextUseFlags.DontCombine));
+            var opaqueOccludersToCombine = opaqueOccluders.Where(o => !o.useFlags.HasFlag(MeshContextUseFlags.DontCombine));
 
+            var combinedOccluders = transparentOccluders.Union(nonCombinedOpaqueOccluders);
+
+            // Divide opaque instances into one with normal bias
+            var combineOpaqueInstancesNormalBias = opaqueOccludersToCombine.Where(o => o.useFlags.HasFlag(MeshContextUseFlags.ShouldApplyNormalBias)).SelectMany(o => o.GetCombineInstances()).ToArray();
             Mesh meshBias;
 
-            if (combineInstancesNormalBias.Length > 0)
+            if (combineOpaqueInstancesNormalBias.Length > 0)
             {
                 meshBias = new Mesh();
                 meshBias.name = "BakeAOPass_CombinedMesh_Bias_" + (CombineMeshCounter++);
                 meshBias.hideFlags = HideFlags.DontSaveInEditor;
                 meshBias.indexFormat = IndexFormat.UInt32;
-                meshBias.CombineMeshes(combineInstancesNormalBias, true, true, false);
+                meshBias.CombineMeshes(combineOpaqueInstancesNormalBias, true, true, false);
                 meshBias.RecalculateBounds();
 
                 allocatedAssets.Add(meshBias);
 
-                combinedOccluders = combinedOccluders.Append(new MeshContext(meshBias, UVChannel.UV0, MeshContextUseFlags.ShouldApplyNormalBias));
+                // Add then to combined occluders
+                combinedOccluders = combinedOccluders.Append(new MeshContext(meshBias, -1, UVChannel.UV0, MeshContextUseFlags.ShouldApplyNormalBias));
             }
 
+            // And make ones with no normal bias
+            var combineOpaqueInstancesNoBias = opaqueOccludersToCombine.Where(o => !o.useFlags.HasFlag(MeshContextUseFlags.ShouldApplyNormalBias)).SelectMany(o => o.GetCombineInstances()).ToArray();
             Mesh meshNoBias;
 
-            if (combineInstancesNoBias.Length > 0)
+            if (combineOpaqueInstancesNoBias.Length > 0)
             {
                 meshNoBias = new Mesh();
                 meshNoBias.name = "BakeAOPass_CombinedMesh_NoBias_" + (CombineMeshCounter++);
                 meshNoBias.hideFlags = HideFlags.DontSaveInEditor;
                 meshNoBias.indexFormat = IndexFormat.UInt32;
-                meshNoBias.CombineMeshes(combineInstancesNoBias, true, true, false);
+                meshNoBias.CombineMeshes(combineOpaqueInstancesNoBias, true, true, false);
                 meshNoBias.RecalculateBounds();
 
                 allocatedAssets.Add(meshNoBias);
 
-                combinedOccluders = combinedOccluders.Append(new MeshContext(meshNoBias, UVChannel.UV0, MeshContextUseFlags.Default));
+                // Add then to combined occluders
+                combinedOccluders = combinedOccluders.Append(new MeshContext(meshNoBias, -1, UVChannel.UV0, MeshContextUseFlags.Default));
             }
 
             return combinedOccluders.ToList();
@@ -295,7 +308,7 @@ namespace ProceduralPixels.BakeAO.Editor
             Matrix4x4 viewToWorld = Matrix4x4.TRS(sample.positionWS, rotation, Vector3.one);
             Matrix4x4 worldToView = viewToWorld.inverse;
 
-            Matrix4x4 projection = GL.GetGPUProjectionMatrix(Matrix4x4.Perspective(tracerFov, 1.0f, 0.001f, maxOccluderDistance), true);
+            Matrix4x4 projection = GL.GetGPUProjectionMatrix(Matrix4x4.Perspective(tracerFov, 1.0f, 0.00025f, maxOccluderDistance), true);
 
             cmd.SetGlobalFloat(ShaderUniforms._MaxOccluderDistance, maxOccluderDistance);
 
@@ -308,23 +321,6 @@ namespace ProceduralPixels.BakeAO.Editor
             BakeAOUtils.FastBoundsTransform boundsTransformer = BakeAOUtils.FastBoundsTransform.Create();
 
             float maxUVDistributionMetric = 0.0f;
-
-            // TODO: Make occluder only occlude
-            for (int meshIndex = 0; meshIndex < meshesToBake.MeshesToBake.Count; meshIndex++)
-            {
-                var meshToBake = meshesToBake.MeshesToBake[meshIndex];
-                if (ShouldRender(meshToBake))
-                {
-                    //float uvDistributionMetric = Mathf.Sqrt(meshToBake.mesh.GetUVDistributionMetric((int)meshToBake.uv));
-                    //uvDistributionMetric *= meshToBake.objectToWorld.lossyScale.magnitude; // TODO: Check it, something is wrong with UV distribution
-                    maxUVDistributionMetric = Mathf.Max(maxUVDistributionMetric, 1.0f / meshToBake.uvToWorldRatio);
-                    cmd.SetGlobalMatrix(ShaderUniforms._AOBake_MatrixM, meshToBake.objectToWorld);
-                    cmd.SetGlobalFloat(ShaderUniforms._AOBake_PixelScaleWS, 0.0f);
-                    for (int submeshIndex = 0; submeshIndex < meshToBake.mesh.subMeshCount; submeshIndex++)
-                        cmd.DrawMesh(meshToBake.mesh, meshToBake.objectToWorld, BakeAOResources.Instance.AOBakeMaterial, submeshIndex, 0);
-                }
-            }
-
             float pixelScaleWS = maxUVDistributionMetric / renderTargetResolution.x;
 
             if (occluders != null)
@@ -336,8 +332,13 @@ namespace ProceduralPixels.BakeAO.Editor
                     {
                         cmd.SetGlobalFloat(ShaderUniforms._AOBake_PixelScaleWS, pixelScaleWS * 0.5f * (meshToBake.useFlags.HasFlag(MeshContextUseFlags.ShouldApplyNormalBias) ? 1.0f : 0.0f));
                         cmd.SetGlobalMatrix(ShaderUniforms._AOBake_MatrixM, meshToBake.objectToWorld);
+                        cmd.SetGlobalFloat(ShaderUniforms._Transparency, meshToBake.transparency);
+                        int passID = meshToBake.IsTransparent() ? 1 : 0;
                         for (int submeshIndex = 0; submeshIndex < meshToBake.mesh.subMeshCount; submeshIndex++)
-                            cmd.DrawMesh(meshToBake.mesh, meshToBake.objectToWorld, BakeAOResources.Instance.AOBakeMaterial, submeshIndex, 0);
+                        {
+                            if (meshToBake.ShouldBakeSubmesh(submeshIndex))
+                                cmd.DrawMesh(meshToBake.mesh, meshToBake.objectToWorld, BakeAOResources.Instance.AOBakeMaterial, submeshIndex, passID);
+                        }
                     }
                 }
             }

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7947acca5211e7d4c8a44d20ba3372f2
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 263743
+  packageName: Bake AO - Easy ambient occlusion baking
+  packageVersion: 1.2.0
+  assetPath: Assets/ProceduralPixels/BakeAO/ASESupport/Readme.txt
+  uploadId: 754736

@@ -2,7 +2,7 @@
 Bake AO - Easy Ambient Occlusion Baking - A plugin for baking ambient occlusion (AO) textures in the Unity Editor.
 by Procedural Pixels - Jan Mróz
 
-Documentation: https://proceduralpixels/BakeAO/Documentation
+Documentation: https://proceduralpixels.com/BakeAO/Documentation
 Asset Store: https://assetstore.unity.com/packages/slug/263743 
 
 Help: If the plugin is not working correctly, if there’s a bug, or if you need assistance and the documentation does not help, please contact me via Discord (https://discord.gg/NT2pyQ28Jx) or email (dev@proceduralpixels.com).
@@ -70,9 +70,13 @@ namespace ProceduralPixels.BakeAO.Editor
 				cmd.SetGlobalMatrix(ShaderUniforms._AOBake_MatrixMInv, meshToBake.objectToWorld.inverse);
 				var keyword = GetUVKeyword(meshToBake.uv);
 				cmd.EnableShaderKeyword(keyword);
-				for (int submeshIndex = 0; submeshIndex < meshToBake.mesh.subMeshCount; submeshIndex++)
-					cmd.DrawMesh(meshToBake.mesh, Matrix4x4.identity, BakeAOResources.Instance.RenderUVBufferMaterial, submeshIndex);
-				cmd.DisableShaderKeyword(keyword);
+                for (int submeshIndex = 0; submeshIndex < meshToBake.mesh.subMeshCount; submeshIndex++)
+                {
+                    if (meshToBake.ShouldBakeSubmesh(submeshIndex))
+						cmd.DrawMesh(meshToBake.mesh, Matrix4x4.identity, BakeAOResources.Instance.RenderUVBufferMaterial, submeshIndex);
+                }
+
+                cmd.DisableShaderKeyword(keyword);
 			}
 
 			cmd.SetGlobalFloat(ShaderUniforms._TextureSize, (float)bakingData.textureSize);
