@@ -1,4 +1,3 @@
-using System.Collections;
 using System.IO;
 using UnityEngine;
 
@@ -12,15 +11,14 @@ public class ScreenshotCamera : MonoBehaviour
 
     [SerializeField] Transform pivot;
     [SerializeField] bool rotates;
+    Vector3 input;
 
 
-    private void Awake()
-    {
-        // Destroy(gameObject);
-    }
     private void FixedUpdate()
     {
-        pivot.Rotate(Vector3.up / 5);
+        if (rotates) pivot.Rotate(Vector3.up / 5);
+        transform.position += (transform.right * input.x + transform.forward * input.y) * Time.deltaTime;
+
     }
     public void TakeScreenshot()
     {
@@ -56,19 +54,9 @@ public class ScreenshotCamera : MonoBehaviour
 
     }
 
-    IEnumerator TakingVideoRoutine()
+    private void Update()
     {
-        yield return new WaitForSeconds(2);
-
-        float timer = 1;
-
-        while (timer > 0)
-        {
-            timer -= Time.deltaTime;
-            yield return new WaitForSeconds(1 / 60);
-            TakeScreenshot();
-        }
-
+        input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
     }
 
 }

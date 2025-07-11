@@ -146,9 +146,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 2800000, guid: 7b482e0652e97654797730b7cd5e9a03,
+  ambientOcclusionTexture: {fileID: 2800000, guid: 50651e7f08972ca498e43527e514805e,
     type: 3}
-  occlusionStrength: 1
+  occlusionStrength: 0.39
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 0
   rendererRef: {fileID: 304695696}
@@ -621,7 +621,7 @@ PrefabInstance:
     - target: {fileID: 208693766032160020, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
         type: 3}
       propertyPath: rotates
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4272036053241473779, guid: 1d2ec91214b3da745b7e9a179f6e10b2,
         type: 3}
@@ -1037,11 +1037,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 2800000, guid: 2136e93abdf258247814a76cd39ff15c,
+  ambientOcclusionTexture: {fileID: 2800000, guid: 50651e7f08972ca498e43527e514805e,
     type: 3}
-  occlusionStrength: 0.59
+  occlusionStrength: 0.39
   occlusionUVSet: 0
-  applyOcclusionIntoDiffuse: 0
+  applyOcclusionIntoDiffuse: 1
   rendererRef: {fileID: 1820503635}
 --- !u!1 &1974557783
 GameObject:
