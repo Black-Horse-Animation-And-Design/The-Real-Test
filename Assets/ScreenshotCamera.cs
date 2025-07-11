@@ -56,7 +56,16 @@ public class ScreenshotCamera : MonoBehaviour
 
     private void Update()
     {
-        input = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+        Vector3 forward = transform.up;
+        Vector3 right = transform.right;
+
+        forward.Normalize();
+        right.Normalize();
+
+        input = forward * y + right * -x;
+
     }
 
 }
