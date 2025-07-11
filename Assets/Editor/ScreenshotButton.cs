@@ -14,11 +14,5 @@ public class ScreenshotButton : Editor
             screenshotCam.TakeScreenshot();
         }
 
-        if (GUILayout.Button("Take Video"))
-        {
-            screenshotCam.TakeVideo();
-        }
-
-
     }
 }

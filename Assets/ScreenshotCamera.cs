@@ -10,6 +10,9 @@ public class ScreenshotCamera : MonoBehaviour
 
     [SerializeField] string screenshotName;
 
+    [SerializeField] Transform pivot;
+    [SerializeField] bool rotates;
+
 
     private void Awake()
     {
@@ -17,7 +20,7 @@ public class ScreenshotCamera : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        transform.Rotate(Vector3.up / 5);
+        pivot.Rotate(Vector3.up / 5);
     }
     public void TakeScreenshot()
     {
@@ -53,10 +56,6 @@ public class ScreenshotCamera : MonoBehaviour
 
     }
 
-    public void TakeVideo()
-    {
-        StartCoroutine(TakingVideoRoutine());
-    }
     IEnumerator TakingVideoRoutine()
     {
         yield return new WaitForSeconds(2);
