@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 public class ScreenshotCamera : MonoBehaviour
@@ -12,14 +10,18 @@ public class ScreenshotCamera : MonoBehaviour
 
     [SerializeField] string screenshotName;
 
+
     private void Awake()
     {
-        Destroy(gameObject);
+        // Destroy(gameObject);
     }
-
+    private void FixedUpdate()
+    {
+        transform.Rotate(Vector3.up / 5);
+    }
     public void TakeScreenshot()
     {
-      
+
         cam = GetComponent<Camera>();
 
         RenderTexture rt = new RenderTexture(screenshotSize.x, screenshotSize.y, 24);
@@ -32,7 +34,7 @@ public class ScreenshotCamera : MonoBehaviour
 
         byte[] bytes = screenShot.EncodeToPNG();
         string filename = "Assets/" + screenshotName;
- 
+
 
         if (File.Exists(filename + ".png"))
         {
@@ -46,10 +48,28 @@ public class ScreenshotCamera : MonoBehaviour
                 }
             }
         }
-            filename += ".png";
+        filename += ".png";
         File.WriteAllBytes(filename, bytes);
-      
-      
 
     }
+
+    public void TakeVideo()
+    {
+        StartCoroutine(TakingVideoRoutine());
+    }
+    IEnumerator TakingVideoRoutine()
+    {
+        yield return new WaitForSeconds(2);
+
+        float timer = 1;
+
+        while (timer > 0)
+        {
+            timer -= Time.deltaTime;
+            yield return new WaitForSeconds(1 / 60);
+            TakeScreenshot();
+        }
+
+    }
+
 }
