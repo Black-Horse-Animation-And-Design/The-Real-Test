@@ -11,12 +11,13 @@ public class ScreenshotCamera : MonoBehaviour
 
     [SerializeField] Transform pivot;
     [SerializeField] bool rotates;
+    [SerializeField] float rotateSpeed = .2f;
     Vector3 input;
 
 
     private void FixedUpdate()
     {
-        if (rotates) pivot.Rotate(Vector3.up / 5);
+        if (rotates) pivot.Rotate(Vector3.up * rotateSpeed);
         transform.position += (transform.right * input.x + transform.forward * input.y) * Time.deltaTime;
 
     }
