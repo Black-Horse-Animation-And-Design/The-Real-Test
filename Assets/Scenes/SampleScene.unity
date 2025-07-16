@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 0.77
+  m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.22921859, g: 0.3005148, b: 0.4811321, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: ffd8e93d7ba887349a59aed52ae8366c, type: 2}
@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 37f94608be891a041ade398fa464ebeb, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: d31504943ad0c1844a996d379b6a48f4, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 6a0d74361d36fd64d9ef3b0c33008664, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 2800000, guid: 50651e7f08972ca498e43527e514805e, type: 3}
+  ambientOcclusionTexture: {fileID: 2800000, guid: c4242cc3d8c2b014c82677a751636ef1, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: dacb5e9b2cdc5e4468926d40272f740a, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 4576026d319d7ef4ea83bd2c1b6af465, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -250,7 +250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 35675be4c4e2fbe40be51c6322bc8ee2, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -268,7 +268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 0f9d83afdb16e5047a0178f218cf255a, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -286,7 +286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 158cbd006de01d54e9c917050b2aafc6, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 5fe0a3dd863f24b46bb5823a0ed4fea5, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -322,7 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 2ad8186b985a7f449a68a44f2b148102, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -340,7 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: c2a2b96f97097834c82b2125bd1df690, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 09e810ba4274a2b4f9bc28474d9f3ec7, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -425,7 +425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 48e2d59c03246b8428c1db70c1f33ca6, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -443,7 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: dc8488506dc021344b8bd4dcd7e0e540, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -461,7 +461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: f2249b48db35e7349890e1dfa97c8541, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -479,7 +479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: dadaffa5526e6264681a14774c10b852, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -497,7 +497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 7dd43f9d03a794e4cb737d695c2835bc, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -515,7 +515,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 89ccaa6a808c9e645a493e89f37b7b8a, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -565,7 +565,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 5af8ddc44a8e0be42806be7c5696fece, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -583,7 +583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 0333b03edde9b4647ba329cd3710e214, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -601,7 +601,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 9e65dfba071e9e3409908f619975dc3f, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -619,7 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 8b0afb7aab7a04d4899b25d5f28e2e66, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -637,7 +637,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 289d42618b846934baf2f7cf4d7de86b, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -660,7 +660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 7fa60cfea2f2a5d429fcddf47c4e3f89, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -678,7 +678,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 7e0d5b58dad1cc046b14ab4f39d29fcf, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -696,7 +696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 485f6b89da401fc4fa5508dab63915db, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -714,7 +714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 1df73c648d0308e4487c0ffc69f7daaf, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -732,7 +732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: c4f451c5e6847e1479284396cebd4c41, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1010,7 +1010,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 6a5357de0b6b0994496934e51b2ddc70, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1028,7 +1028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: cc8bebe5f5b82fc4eb29695266c1dbac, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1046,7 +1046,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: afc87813c9b191b4793f608b56c9fbbd, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1185,7 +1185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: ac4eb782ff5ba2f4db2173401c7ed6ec, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1203,7 +1203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 01d95f2d6fbdc344ebf189cab0d97bad, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1221,7 +1221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: e1dd724c8ed6ccc4f890e08e11d4580b, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1239,7 +1239,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 4bb2a798cb643dc44ae9ed376cb477b0, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1354,7 +1354,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 96f4d814fb361e548b5cc0cc253b9412, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1372,7 +1372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: a3a4294f4a4b8404d87d3f6d8d1c9984, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -1499,7 +1499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 392fd283a7d404945988f3dad5fea742, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2629,7 +2629,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 27eca6600fe676b48899361ff8448dc5, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2647,7 +2647,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 011010ef406855848938d8f4d4754f73, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2665,7 +2665,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 179a7598540b0414884344044f4db424, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2683,7 +2683,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 88028eff8296eea4c985ea34b3f1b205, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2701,7 +2701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: f802ccd6076df8d4f95c6c2dff71b10f, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2895,7 +2895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: a347b779e4e13584392cb0a45e11d96c, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2923,7 +2923,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 2800000, guid: 50651e7f08972ca498e43527e514805e, type: 3}
+  ambientOcclusionTexture: {fileID: 2800000, guid: e33b520a0b1e67d4996a5235db07cd89, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2941,7 +2941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: e2e1d5a759b82ff47aa9037531da6c6e, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2959,7 +2959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 8f1fdb82ea3556b48b642d53d9eb1d27, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2977,7 +2977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 6412f363f89171745b5f037f63f9ae6e, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -2995,7 +2995,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 3bc96b82273208041a8cf2d826e89a82, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3013,7 +3013,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 397fbc5faa458cd48b243835813b217d, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3096,7 +3096,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: f449fbf6fc1cfd24585d1a7d51938390, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3114,7 +3114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 65ff37d2b2090994d91cd3873c60c77a, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3243,7 +3243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: ea2e25ad7e815ee49b1d2ee470245ef6, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3261,7 +3261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 15b1108649807d946a56520d6969ecea, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3279,7 +3279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: cc24065d731f63246bf0b35a9b072bf2, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3297,7 +3297,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: b5d8c2fe8be7edb46a41dbdec01fa746, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3315,7 +3315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 6be55b966e7b35146928eeff844dc83b, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
@@ -3333,7 +3333,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 0
-  ambientOcclusionTexture: {fileID: 0}
+  ambientOcclusionTexture: {fileID: 2800000, guid: 2f8aaacace7041a459ed7f80ee3d069a, type: 3}
   occlusionStrength: 0.9
   occlusionUVSet: 0
   applyOcclusionIntoDiffuse: 1
