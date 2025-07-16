@@ -213,33 +213,33 @@ MonoBehaviour:
   cellSharedDataAsset:
     m_AssetGUID: e5b4a3b7a9d623d4abb3ae986dbadaac
     m_StreamableAssetPath: APVStreamingAssets\14c4997762cdbb84cbeaf27fe572fa3c\e5b4a3b7a9d623d4abb3ae986dbadaac.bytes
-    m_ElementSize: 8192
+    m_ElementSize: 73728
     m_StreamableCellDescs:
       m_Keys: 020000001100000007000000160000000300000012000000080000001700000005000000140000000600000015000000
       m_Values:
       - offset: 0
         elementCount: 1
-      - offset: 8192
-        elementCount: 1
-      - offset: 16384
-        elementCount: 2
-      - offset: 32768
-        elementCount: 3
-      - offset: 57344
-        elementCount: 1
-      - offset: 65536
-        elementCount: 1
       - offset: 73728
+        elementCount: 1
+      - offset: 147456
         elementCount: 2
-      - offset: 90112
+      - offset: 294912
+        elementCount: 3
+      - offset: 516096
+        elementCount: 1
+      - offset: 589824
+        elementCount: 1
+      - offset: 663552
         elementCount: 2
-      - offset: 106496
+      - offset: 811008
+        elementCount: 2
+      - offset: 958464
         elementCount: 1
-      - offset: 114688
+      - offset: 1032192
         elementCount: 1
-      - offset: 122880
+      - offset: 1105920
         elementCount: 1
-      - offset: 131072
+      - offset: 1179648
         elementCount: 1
     m_Asset: {fileID: 4900000, guid: e5b4a3b7a9d623d4abb3ae986dbadaac, type: 3}
   scenarios:
@@ -416,7 +416,7 @@ MonoBehaviour:
   bakedSimplificationLevels: 2
   bakedMinDistanceBetweenProbes: 0.6
   bakedProbeOcclusion: 0
-  bakedSkyOcclusionValue: 0
+  bakedSkyOcclusionValue: 1
   bakedSkyShadingDirectionValue: 0
   bakedProbeOffset: {x: 0, y: 0, z: 0}
   bakedMaskCount: 1
@@ -431,9 +431,9 @@ MonoBehaviour:
   L2TextureChunkSize: 32768
   ProbeOcclusionChunkSize: 0
   sharedValidityMaskChunkSize: 8192
-  sharedSkyOcclusionL0L1ChunkSize: 0
+  sharedSkyOcclusionL0L1ChunkSize: 65536
   sharedSkyShadingDirectionIndicesChunkSize: 0
-  sharedDataChunkSize: 8192
+  sharedDataChunkSize: 73728
   supportPositionChunkSize: 98304
   supportValidityChunkSize: 32768
   supportTouchupChunkSize: 32768
@@ -450,7 +450,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 567
   minRendererVolumeSize: 0.1
-  skyOcclusion: 0
+  skyOcclusion: 1
   skyOcclusionBakingSamples: 2048
   skyOcclusionBakingBounces: 2
   skyOcclusionAverageAlbedo: 0.6
