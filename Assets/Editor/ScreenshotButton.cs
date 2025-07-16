@@ -1,5 +1,8 @@
-using UnityEditor;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 [CustomEditor(typeof(ScreenshotCamera))]
 public class ScreenshotButton : Editor
 {
@@ -7,12 +10,13 @@ public class ScreenshotButton : Editor
     {
         DrawDefaultInspector();
 
-        ScreenshotCamera screenshotCam = (ScreenshotCamera)target;
+        ScreenshotCamera terrainModifier = (ScreenshotCamera)target;
 
         if (GUILayout.Button("Take Screenshot"))
         {
-            screenshotCam.TakeScreenshot();
+            terrainModifier.TakeScreenshot();
         }
+
 
     }
 }
