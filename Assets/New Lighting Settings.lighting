@@ -19,10 +19,10 @@ LightingSettings:
   m_LightmapMaxSize: 128
   m_LightmapSizeFixed: 0
   m_UseMipmapLimits: 1
-  m_BakeResolution: 40
-  m_Padding: 2
+  m_BakeResolution: 80
+  m_Padding: 4
   m_LightmapCompression: 3
-  m_AO: 1
+  m_AO: 0
   m_AOMaxDistance: 40
   m_CompAOExponent: 7.18
   m_CompAOExponentDirect: 5.41
@@ -46,7 +46,7 @@ LightingSettings:
   m_LightProbeSampleCountMultiplier: 4
   m_PVRBounces: 2
   m_PVRMinBounces: 2
-  m_PVREnvironmentImportanceSampling: 1
+  m_PVREnvironmentImportanceSampling: 0
   m_PVRFilteringMode: 1
   m_PVRDenoiserTypeDirect: 1
   m_PVRDenoiserTypeIndirect: 1
