@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using UnityEditor;
 using UnityEngine;
 
 public class ScreenshotCamera : MonoBehaviour
@@ -12,14 +9,21 @@ public class ScreenshotCamera : MonoBehaviour
 
     [SerializeField] string screenshotName;
 
-    private void Awake()
-    {
-        Destroy(gameObject);
-    }
+    [SerializeField] Transform pivot;
+    [SerializeField] bool rotates;
+    [SerializeField] float rotateSpeed = .2f;
+    Vector3 input;
 
+
+    private void FixedUpdate()
+    {
+        if (rotates) pivot.Rotate(Vector3.up * rotateSpeed);
+        transform.position += (transform.right * input.x + transform.forward * input.y) * Time.deltaTime;
+
+    }
     public void TakeScreenshot()
     {
-      
+
         cam = GetComponent<Camera>();
 
         RenderTexture rt = new RenderTexture(screenshotSize.x, screenshotSize.y, 24);
@@ -32,7 +36,7 @@ public class ScreenshotCamera : MonoBehaviour
 
         byte[] bytes = screenShot.EncodeToPNG();
         string filename = "Assets/" + screenshotName;
- 
+
 
         if (File.Exists(filename + ".png"))
         {
@@ -46,10 +50,23 @@ public class ScreenshotCamera : MonoBehaviour
                 }
             }
         }
-            filename += ".png";
+        filename += ".png";
         File.WriteAllBytes(filename, bytes);
-      
-      
 
     }
+
+    private void Update()
+    {
+        float x = Input.GetAxisRaw("Horizontal");
+        float y = Input.GetAxisRaw("Vertical");
+        Vector3 forward = transform.up;
+        Vector3 right = transform.right;
+
+        forward.Normalize();
+        right.Normalize();
+
+        input = forward * y + right * -x;
+
+    }
+
 }
