@@ -10,15 +10,18 @@ public class ScreenshotCamera : MonoBehaviour
     [SerializeField] string screenshotName;
 
     [SerializeField] Transform pivot;
-    [SerializeField] bool rotates;
-    [SerializeField] float rotateSpeed = .2f;
+    [SerializeField] bool rotates, moves;
+    [SerializeField] float rotateSpeed = .2f, moveSpeed = .5f;
     Vector3 input;
+    [SerializeField]
+    Vector3 direction;
 
 
     private void FixedUpdate()
     {
         if (rotates) pivot.Rotate(Vector3.up * rotateSpeed);
-        transform.position += (transform.right * input.x + transform.forward * input.y) * Time.deltaTime;
+        transform.position += (transform.right * input.x + transform.forward * input.y) * Time.deltaTime * moveSpeed;
+        if (moves) transform.position += direction * Time.deltaTime * moveSpeed;
 
     }
     public void TakeScreenshot()
@@ -57,7 +60,7 @@ public class ScreenshotCamera : MonoBehaviour
 
     private void Update()
     {
-        float x = Input.GetAxisRaw("Horizontal");
+        float x = -Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
         Vector3 forward = transform.up;
         Vector3 right = transform.right;
